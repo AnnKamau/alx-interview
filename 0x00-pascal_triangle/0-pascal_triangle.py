@@ -3,6 +3,7 @@
 0-pascal_triangle.py
 This module is used to solve the pascal triangle problem.
 """
+
 def pascal_triangle(n):
     """
     Pascal triangle
@@ -13,7 +14,6 @@ def pascal_triangle(n):
     Return:
     (list): the flattened pascal triangle' height n
     """
-    
     if n <= 0:
         return []
 
@@ -26,4 +26,3 @@ def pascal_triangle(n):
         triangle.append(row)
 
     return triangle
-    
