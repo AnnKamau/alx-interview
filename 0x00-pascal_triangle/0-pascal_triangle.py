@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 """
-0-pascal_triangle.py
 This module is used to solve the pascal triangle problem.
 """
 
