@@ -18,3 +18,4 @@ Returns an empty list if n <= 0
         triangle.append(row)
     
     return triangle
+
