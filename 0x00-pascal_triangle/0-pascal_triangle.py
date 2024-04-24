@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+
 """
 This module is used to solve the pascal triangle problem.
 """
@@ -13,6 +14,7 @@ def pascal_triangle(n):
     Return:
     (list): the flattened pascal triangle' height n
     """
+    
     if n <= 0:
         return []
 
