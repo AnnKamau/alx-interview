@@ -13,6 +13,7 @@ def pascal_triangle(n):
     Return:
     (list): the flattened pascal triangle' height n
     """
+    
     if n <= 0:
         return []
 
