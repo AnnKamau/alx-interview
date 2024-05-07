@@ -3,6 +3,16 @@
 Minimum Operations
 """
 def minOperations(n):
+    """
+    Minimum Operations
+
+    Arguments:
+    n (int): Number of operations
+
+    Return:
+    Returns an integer
+    If n is impossible to achieve, return 0
+    """
     if n <= 1:
         return n
 
