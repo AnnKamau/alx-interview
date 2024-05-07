@@ -20,10 +20,10 @@ def minOperations(n):
     current_h = 1
     while current_h < n:
         if n % current_h == 0:
-            operations += current_h  # Copy all 'H' and paste n // current_h times
+            operations += current_h
             current_h *= n // current_h
         else:
-            operations += current_h  # Copy all 'H' and paste once
-            current_h += current_h    # Update current_h to be doubled
+            operations += current_h
+            current_h += current_h
 
     return operations
