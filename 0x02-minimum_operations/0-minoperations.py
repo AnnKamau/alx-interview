@@ -14,16 +14,14 @@ def minOperations(n):
     If n is impossible to achieve, return 0
     """
     if n <= 1:
-        return n
+        return 0
+    
+    for i in range(2, n + 1):
+        if n % i == 0:
+            return i + minOperations(n // i)
 
-    operations = 0
-    current_h = 1
-    while current_h < n:
-        if n % current_h == 0:
-            operations += current_h
-            current_h *= n // current_h
-        else:
-            operations += current_h
-            current_h += current_h
+n = 4
+print("Min # of operations to reach {} char: {}".format(n, minOperations(n)))
 
-    return operations
+n = 12
+print("Min # of operations to reach {} char: {}".format(n, minOperations(n)))
