@@ -13,7 +13,7 @@ def minOperations(n):
     Returns an integer
     If n is impossible to achieve, return 0
     """
-   if n <= 1:
+    if n <= 1:
         return 0
 
     operations = 0
