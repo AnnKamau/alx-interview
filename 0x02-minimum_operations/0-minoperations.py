@@ -19,9 +19,3 @@ def minOperations(n):
     for i in range(2, n + 1):
         if n % i == 0:
             return i + minOperations(n // i)
-
-n = 4
-print("Min # of operations to reach {} char: {}".format(n, minOperations(n)))
-
-n = 12
-print("Min # of operations to reach {} char: {}".format(n, minOperations(n)))
