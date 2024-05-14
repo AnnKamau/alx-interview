@@ -21,25 +21,32 @@ try:
     for line in sys.stdin:
         parts = line.split()
 
-        if len(parts) != 7 or parts[2] != '"GET' or parts[3] != '/projects/260' or parts[4] != 'HTTP/1.1"' or not parts[5].isdigit() or not parts[6].isdigit():
+        # Validate line format
+        if len(parts) < 7 or parts[2] != '"GET' or parts[3] != '/projects/260' or parts[4] != 'HTTP/1.1"' or not parts[5].isdigit() or not parts[6].isdigit():
             continue
 
+        # Extract relevant parts
         status_code = int(parts[5])
         file_size = int(parts[6])
 
+        # Update total file size
         total_file_size += file_size
 
+        # Update status code counts
         if status_code in status_code_counts:
             status_code_counts[status_code] += 1
 
+        # Increment line count
         line_count += 1
 
+        # Print statistics every 10 lines
         if line_count % 10 == 0:
             print_statistics()
 
 except KeyboardInterrupt:
-
+    # Print final statistics on keyboard interruption
     print_statistics()
     raise
 
+# Print final statistics after EOF
 print_statistics()
