@@ -3,6 +3,7 @@
 Reads stdin line by line and computes metrics.
 """
 import sys
+import signal
 
 total_file_size = 0
 status_code_counts = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
@@ -17,17 +18,40 @@ def print_statistics():
         if status_code_counts[code] > 0:
             print(f"{code}: {status_code_counts[code]}")
 
+def signal_handler(sig, frame):
+    """
+    Signal handler for keyboard interruption (CTRL + C).
+    """
+    print_statistics()
+    sys.exit(0)
+
+# Register the signal handler
+signal.signal(signal.SIGINT, signal_handler)
+
 try:
     for line in sys.stdin:
         parts = line.split()
 
         # Validate line format
-        if len(parts) < 7 or parts[2] != '"GET' or parts[3] != '/projects/260' or parts[4] != 'HTTP/1.1"' or not parts[5].isdigit() or not parts[6].isdigit():
+        if len(parts) < 7:
             continue
 
-        # Extract relevant parts
-        status_code = int(parts[5])
-        file_size = int(parts[6])
+        ip_address = parts[0]
+        date = parts[3] + " " + parts[4]
+        method = parts[5][1:]
+        path = parts[6]
+        protocol = parts[7][:-1]
+        status_code_str = parts[8]
+        file_size_str = parts[9]
+
+        # Further format validation
+        if method != "GET" or path != "/projects/260" or protocol != "HTTP/1.1":
+            continue
+        if not status_code_str.isdigit() or not file_size_str.isdigit():
+            continue
+
+        status_code = int(status_code_str)
+        file_size = int(file_size_str)
 
         # Update total file size
         total_file_size += file_size
@@ -43,8 +67,8 @@ try:
         if line_count % 10 == 0:
             print_statistics()
 
-except KeyboardInterrupt:
-    # Print final statistics on keyboard interruption
+except Exception:
+    # Catch all other exceptions and print statistics
     print_statistics()
     raise
 
