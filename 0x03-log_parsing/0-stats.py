@@ -33,7 +33,7 @@ try:
         parts = line.split()
 
         # Validate line format
-        if len(parts) < 7:
+        if len(parts) < 9:
             continue
 
         ip_address = parts[0]
@@ -41,8 +41,8 @@ try:
         method = parts[5][1:]
         path = parts[6]
         protocol = parts[7][:-1]
-        status_code_str = parts[8]
-        file_size_str = parts[9]
+        status_code_str = parts[-2]
+        file_size_str = parts[-1]
 
         # Further format validation
         if method != "GET" or path != "/projects/260" or protocol != "HTTP/1.1":
@@ -67,9 +67,10 @@ try:
         if line_count % 10 == 0:
             print_statistics()
 
-except Exception:
-    # Catch all other exceptions and print statistics
+except Exception as e:
+    # Catch all other exceptions, print statistics and re-raise the exception
     print_statistics()
+    print(f"An error occurred: {e}", file=sys.stderr)
     raise
 
 # Print final statistics after EOF
