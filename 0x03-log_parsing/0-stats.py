@@ -5,6 +5,7 @@ Reads stdin line by line and computes metrics.
 import sys
 import signal
 
+# Initialize total file size and status code counts
 total_file_size = 0
 status_code_counts = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
 line_count = 0
@@ -12,6 +13,12 @@ line_count = 0
 def print_statistics():
     """
     Print the statistics: total file size and number of lines per status code.
+    
+    Arguments:
+    None
+    
+    Returns:
+    None
     """
     print("File size:", total_file_size)
     for code in sorted(status_code_counts.keys()):
@@ -21,10 +28,18 @@ def print_statistics():
 def signal_handler(sig, frame):
     """
     Signal handler for keyboard interruption (CTRL + C).
+    
+    Arguments:
+    sig -- signal number
+    frame -- current stack frame
+    
+    Returns:
+    None
     """
     print_statistics()
     sys.exit(0)
 
+# Set up signal handler for SIGINT (CTRL + C)
 signal.signal(signal.SIGINT, signal_handler)
 
 try:
@@ -61,6 +76,7 @@ try:
             print_statistics()
 
 except (EOFError, KeyboardInterrupt):
+    # Handle EOF and KeyboardInterrupt to print statistics before exiting
     print_statistics()
     sys.exit(0)
 except Exception as e:
