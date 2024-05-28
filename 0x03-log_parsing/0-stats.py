@@ -60,10 +60,11 @@ try:
         if line_count % 10 == 0:
             print_statistics()
 
-except Exception as e:
-
+except (EOFError, KeyboardInterrupt):
     print_statistics()
+    sys.exit(0)
+except Exception as e:
     print(f"An error occurred: {e}", file=sys.stderr)
-    raise
 
+# Ensure statistics are printed after the loop ends
 print_statistics()
