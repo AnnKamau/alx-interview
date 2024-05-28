@@ -5,7 +5,6 @@ Reads stdin line by line and computes metrics.
 import sys
 import signal
 
-# Initialize total file size and status code counts
 total_file_size = 0
 status_code_counts = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
 line_count = 0
@@ -39,7 +38,6 @@ def signal_handler(sig, frame):
     print_statistics()
     sys.exit(0)
 
-# Set up signal handler for SIGINT (CTRL + C)
 signal.signal(signal.SIGINT, signal_handler)
 
 try:
@@ -76,11 +74,10 @@ try:
             print_statistics()
 
 except (EOFError, KeyboardInterrupt):
-    # Handle EOF and KeyboardInterrupt to print statistics before exiting
+    
     print_statistics()
     sys.exit(0)
 except Exception as e:
     print(f"An error occurred: {e}", file=sys.stderr)
 
-# Ensure statistics are printed after the loop ends
 print_statistics()
