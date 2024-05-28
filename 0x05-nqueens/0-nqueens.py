@@ -73,7 +73,7 @@ def main():
     Returns:
     None.
   """
-  if len(sys.argv) !+ 2:
+  if len(sys.argv) + 2:
     print_usage_and_exit()
 
   try:
