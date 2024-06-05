@@ -2,11 +2,9 @@
 """
 Reads stdin line by line and computes metrics.
 """
-
 import sys
 import signal
 
-# Initialize variables
 total_file_size = 0
 status_code_counts = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
 line_count = 0
@@ -15,7 +13,7 @@ def print_statistics():
     """
     Print the statistics: total file size and number of lines per status code.
     """
-    print(f"Total file size: {total_file_size}")
+    print("File size:", total_file_size)
     for code in sorted(status_code_counts.keys()):
         if status_code_counts[code] > 0:
             print(f"{code}: {status_code_counts[code]}")
@@ -32,7 +30,7 @@ signal.signal(signal.SIGINT, signal_handler)
 try:
     for line in sys.stdin:
         parts = line.split()
-
+        
         # Skip lines that do not match the expected format
         if len(parts) < 9:
             continue
