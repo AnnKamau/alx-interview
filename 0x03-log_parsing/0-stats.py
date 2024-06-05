@@ -1,56 +1,69 @@
-#!/usr/bin/env python3
-
-# Import the sys module to access stdin
+#!/usr/bin/python3
+"""
+Reads stdin line by line and computes metrics.
+"""
 import sys
+import signal
 
-# Import the defaultdict class from the collections module to create a dictionary with default values
-from collections import defaultdict
+total_file_size = 0
+status_code_counts = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
+line_count = 0
 
-# Initialize the total file size to 0
-total_size = 0
-
-# Create a dictionary to count the number of lines for each status code
-line_counter = defaultdict(int)
-
-# Initialize a counter for the current number of lines
-current_lines = 0
-
-# Define a function to print the counters
-def print_counters():
-    # Use the global keyword to access the global current_lines variable
-    global current_lines
-    # Print the total file size
-    print(f'Total file size: File size: {total_size}')
-    # Print the number of lines for each status code in sorted order
-    for status_code in sorted(line_counter.keys()):
-        print(f'{status_code}: {line_counter[status_code]}')
-    # Reset the current_lines counter
-    current_lines = 0
-    # Print a blank line for readability
+def print_statistics():
+    """
+    Print the statistics: total file size and number of lines per status code.
+    """
+    print(f"Total file size: File size: {total_file_size}")
+    for code in sorted(status_code_counts.keys()):
+        if status_code_counts[code] > 0:
+            print(f"{code}: {status_code_counts[code]}")
     print()
 
-# Iterate over each line in stdin
-for line in sys.stdin:
-    # Increment the current_lines counter
-    current_lines += 1
-    # Split the line into parts using spaces as separators
-    parts = line.strip().split(' ')
-    # If the line does not have exactly 6 parts, skip it
-    if len(parts)!= 6:
-        continue
-    
-    # Extract the IP address, date, method, status code, and file size from the parts
-    ip, date, method, status_code, file_size = parts
-    # Convert the file size to an integer
-    file_size = int(file_size)
-    # Add the file size to the total size
-    total_size += file_size
-    # Increment the count for the status code
-    line_counter[status_code] += 1
+def signal_handler(sig, frame):
+    """
+    Signal handler for keyboard interruption (CTRL + C).
+    """
+    print_statistics()
+    sys.exit(0)
 
-    # If the current_lines counter is a multiple of 10 or equal to 10000, print the counters
-    if current_lines % 10 == 0 or current_lines == 10000:
-        print_counters()
+signal.signal(signal.SIGINT, signal_handler)
 
-# Print the final counters
-print_counters()
+try:
+    for line in sys.stdin:
+        parts = line.split()
+        
+        # Skip lines that do not match the expected format
+        if len(parts) != 9:
+            continue
+
+        ip_address = parts[0]
+        date = parts[3][1:-1]
+        method = parts[5][1:]
+        path = parts[6]
+        protocol = parts[7][:-1]
+        status_code_str = parts[8]
+        file_size_str = parts[9]
+
+        if method != "GET" or path != "/projects/260" or protocol != "HTTP/1.1":
+            continue
+        if not status_code_str.isdigit() or not file_size_str.isdigit():
+            continue
+
+        status_code = int(status_code_str)
+        file_size = int(file_size_str)
+
+        total_file_size += file_size
+
+        if status_code in status_code_counts:
+            status_code_counts[status_code] += 1
+
+        line_count += 1
+
+        if line_count % 10 == 0:
+            print_statistics()
+
+except (EOFError, KeyboardInterrupt):
+    print_statistics()
+    sys.exit(0)
+
+print_statistics()
