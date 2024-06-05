@@ -13,11 +13,10 @@ def print_statistics():
     """
     Print the statistics: total file size and number of lines per status code.
     """
-    print(f"Total file size: File size: {total_file_size}")
+    print("File size:", total_file_size)
     for code in sorted(status_code_counts.keys()):
         if status_code_counts[code] > 0:
             print(f"{code}: {status_code_counts[code]}")
-    print()
 
 def signal_handler(sig, frame):
     """
@@ -33,16 +32,16 @@ try:
         parts = line.split()
         
         # Skip lines that do not match the expected format
-        if len(parts) != 9:
+        if len(parts) < 9:
             continue
 
         ip_address = parts[0]
-        date = parts[3][1:-1]
+        date = parts[3] + " " + parts[4]
         method = parts[5][1:]
         path = parts[6]
         protocol = parts[7][:-1]
-        status_code_str = parts[8]
-        file_size_str = parts[9]
+        status_code_str = parts[-2]
+        file_size_str = parts[-1]
 
         if method != "GET" or path != "/projects/260" or protocol != "HTTP/1.1":
             continue
