@@ -12,10 +12,10 @@ line_count = 0
 def print_statistics():
     """
     Print the statistics: total file size and number of lines per status code.
-    
+
     Arguments:
     None
-    
+
     Returns:
     None
     """
@@ -27,11 +27,11 @@ def print_statistics():
 def signal_handler(sig, frame):
     """
     Signal handler for keyboard interruption (CTRL + C).
-    
+
     Arguments:
     sig -- signal number
     frame -- current stack frame
-    
+
     Returns:
     None
     """
@@ -74,7 +74,6 @@ try:
             print_statistics()
 
 except (EOFError, KeyboardInterrupt):
-    
     print_statistics()
     sys.exit(0)
 except Exception as e:
