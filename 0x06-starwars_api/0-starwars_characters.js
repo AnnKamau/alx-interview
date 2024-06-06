@@ -7,21 +7,29 @@ const apiUrl = `https://swapi-api.hbtn.io/api/films/${movieId}/`;
 
 request(apiUrl, (error, response, body) => {
   if (error) {
-    console.error(error);
+    console.error('Error:', error);
     return;
   }
-  
+
   const film = JSON.parse(body);
   const characters = film.characters;
-  
-  characters.forEach((characterUrl) => {
-    request(characterUrl, (error, response, body) => {
+
+  const fetchCharacter = (index) => {
+    if (index >= characters.length) {
+      return;
+    }
+
+    request(characters[index], (error, response, body) => {
       if (error) {
-        console.error(error);
+        console.error('Error:', error);
         return;
       }
+
       const character = JSON.parse(body);
       console.log(character.name);
+      fetchCharacter(index + 1);
     });
-  });
+  };
+
+  fetchCharacter(0);
 });
