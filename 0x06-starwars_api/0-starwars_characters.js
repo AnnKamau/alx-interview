@@ -1,32 +1,27 @@
+#!/usr/bin/node
+
 const request = require('request');
 
 const movieId = process.argv[2];
+const apiUrl = `https://swapi-api.hbtn.io/api/films/${movieId}/`;
 
-const url = `https://swapi.dev/api/films/${movieId}/`;
-
-function getCharacterNames(characters, index = 0) {
-  if (index === characters.length) {
-    return;
-  }
-
-  request({ url: characters[index], json: true }, (error, response, body) => {
-    if (error) {
-      console.error('Error fetching data:', error);
-      return;
-    }
-
-    console.log(body.name);
-    getCharacterNames(characters, index + 1);
-  });
-}
-
-request({ url, json: true }, (error, response, body) => {
+request(apiUrl, (error, response, body) => {
   if (error) {
-    console.error('Error fetching data:', error);
+    console.error(error);
     return;
   }
-
-  const characters = body.characters;
-  getCharacterNames(characters);
+  
+  const film = JSON.parse(body);
+  const characters = film.characters;
+  
+  characters.forEach((characterUrl) => {
+    request(characterUrl, (error, response, body) => {
+      if (error) {
+        console.error(error);
+        return;
+      }
+      const character = JSON.parse(body);
+      console.log(character.name);
+    });
+  });
 });
-
