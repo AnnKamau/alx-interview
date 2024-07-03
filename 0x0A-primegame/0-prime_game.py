@@ -4,6 +4,17 @@ prime numbers based on a game.
 """
 
 def isWinner(x, nums):
+    """
+    prime numbers based on a game.
+    
+    Args:
+    where x is the number of rounds and nums is an array of n
+    
+    Returns:
+    name of the player that won the most rounds
+    If the winner cannot be determined, return None
+    You can assume n and x will not be larger than 10000
+    """
     def is_prime(num):
         """Helper function to check if a number is prime"""
         if num <= 1:
