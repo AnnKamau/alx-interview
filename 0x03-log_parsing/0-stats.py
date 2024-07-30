@@ -1,49 +1,55 @@
+
 #!/usr/bin/python3
-"""
-Script that reads stdin line by line and computes metrics
-"""
+
 import sys
 
-def print_stats(total_size, status_codes):
-    """
-    Prints the statistics
-    """
-    print("File size: {}".format(total_size))
-    for code in sorted(status_codes.keys()):
-        if status_codes[code] > 0:
-            print("{}: {}".format(code, status_codes[code]))
 
-total_size = 0
-status_codes = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
-line_count = 0
+def print_msg(dict_sc, total_file_size):
+    """
+    Method to print
+    Args:
+        dict_sc: dict of status codes
+        total_file_size: total of the file
+    Returns:
+        Nothing
+    """
+
+    print("File size: {}".format(total_file_size))
+    for key, val in sorted(dict_sc.items()):
+        if val != 0:
+            print("{}: {}".format(key, val))
+
+
+total_file_size = 0
+code = 0
+counter = 0
+dict_sc = {"200": 0,
+           "301": 0,
+           "400": 0,
+           "401": 0,
+           "403": 0,
+           "404": 0,
+           "405": 0,
+           "500": 0}
 
 try:
     for line in sys.stdin:
-        parts = line.split()
-        if len(parts) < 7:
-            continue
-        ip = parts[0]
-        status_code = parts[-2]
-        file_size = parts[-1]
-        
-        try:
-            total_size += int(file_size)
-        except ValueError:
-            continue
+        parsed_line = line.split()  # ✄ trimming
+        parsed_line = parsed_line[::-1]  # inverting
 
-        try:
-            if int(status_code) in status_codes:
-                status_codes[int(status_code)] += 1
-        except ValueError:
-            continue
+        if len(parsed_line) > 2:
+            counter += 1
 
-        line_count += 1
+            if counter <= 10:
+                total_file_size += int(parsed_line[0])  # file size
+                code = parsed_line[1]  # status code
 
-        if line_count % 10 == 0:
-            print_stats(total_size, status_codes)
+                if (code in dict_sc.keys()):
+                    dict_sc[code] += 1
 
-except KeyboardInterrupt:
-    print_stats(total_size, status_codes)
-    raise
+            if (counter == 10):
+                print_msg(dict_sc, total_file_size)
+                counter = 0
 
-print_stats(total_size, status_codes)
+finally:
+    print_msg(dict_sc, total_file_size)
